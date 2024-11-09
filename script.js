@@ -97,6 +97,32 @@ Events.on(engine, 'beforeUpdate', function() {
   }
 });
 
+document.addEventListener('click', (event) => {
+  // クリック位置を取得
+  const mousePosition = { x: event.clientX, y: event.clientY };
+
+  // クリック位置がボールの範囲内にあるかチェック
+  const clickedBodies = Matter.Query.point([ball], mousePosition);
+
+  if (clickedBodies.length > 0) {
+      // ボールの中心位置とクリック位置の差をベクトルで取得
+      const deltaX = ball.position.x - mousePosition.x; // x方向を反転
+      const deltaY = ball.position.y - mousePosition.y; // y方向を反転
+
+      // 力の大きさを調整
+      const forceMagnitude = 0.02; // 力の大きさは調整可能
+
+      // 反転した方向に力を加える
+      const force = {
+          x: deltaX * forceMagnitude,
+          y: deltaY * forceMagnitude
+      };
+
+      // ボールに力を加えて反対方向に飛ばす
+      Matter.Body.applyForce(ball, ball.position, force);
+  }
+});
+
 // リサイズ設定
 window.addEventListener('resize', () => {
   render.options.width = window.innerWidth;
