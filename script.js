@@ -6,7 +6,8 @@ const Engine = Matter.Engine,
     Bodies = Matter.Bodies,
     Composite = Matter.Composite,
     MouseConstraint = Matter.MouseConstraint,
-    Mouse = Matter.Mouse;
+    Mouse = Matter.Mouse,
+    Events = Matter.Events;
 
 // エンジンの生成
 const engine = Engine.create();
@@ -19,7 +20,9 @@ const render = Render.create({
     options: {
       width: window.innerWidth,
       height: window.innerHeight,
+      // antialias: true, // アンチエイリアス
       wireframes: false, // ワイヤーフレーム
+      background: null, // 背景色を透明
     }
 });
 
@@ -37,8 +40,8 @@ const ball = Bodies.circle(
     render: {
       sprite: {
         texture: './ball.png',
-        xScale: 0.125,
-        yScale: 0.125
+        xScale: 0.5,
+        yScale: 0.5
       }
     },
   }
@@ -46,10 +49,10 @@ const ball = Bodies.circle(
 
 // ワールドにすべてのボディ（オブジェクト）を追加
 Composite.add(world, [
-  Bodies.rectangle(window.innerWidth / 2, 0, window.innerWidth, 50, { isStatic: true }), // 上の壁
-  Bodies.rectangle(window.innerWidth / 2, window.innerHeight, window.innerWidth, 50, { isStatic: true }), // 下の壁
-  Bodies.rectangle(window.innerWidth, window.innerHeight / 2, 50, window.innerHeight, { isStatic: true }), // 右の壁
-  Bodies.rectangle(0, window.innerHeight / 2, 50, window.innerHeight, { isStatic: true }), // 左の壁
+  Bodies.rectangle(window.innerWidth / 2, 0, window.innerWidth, 20, { isStatic: true }), // 上の壁 rectangle(中心位置のx座標, 中心位置のy座標, width, height, options)
+  Bodies.rectangle(window.innerWidth / 2, window.innerHeight, window.innerWidth, 20, { isStatic: true }), // 下の壁
+  Bodies.rectangle(window.innerWidth, window.innerHeight / 2, 20, window.innerHeight, { isStatic: true }), // 右の壁
+  Bodies.rectangle(0, window.innerHeight / 2, 20, window.innerHeight, { isStatic: true }), // 左の壁
   ball,
 ]);
 
@@ -78,6 +81,21 @@ var runner = Runner.create();
 
 // run the engine
 Runner.run(runner, engine);
+
+// 画面外にボールが出た場合
+Events.on(engine, 'beforeUpdate', function() {
+  if (ball.position.x < 0 || ball.position.x > window.innerWidth || 
+      ball.position.y < 0 || ball.position.y > window.innerHeight) {
+      
+      setTimeout(() => {
+        // 位置をリセット
+        Matter.Body.setPosition(ball, { x: window.innerWidth / 2, y: window.innerHeight / 4 });
+        
+        // 速度もリセットして安定させる
+        Matter.Body.setVelocity(ball, { x: 0, y: 0 });
+      }, 1000);
+  }
+});
 
 // リサイズ設定
 window.addEventListener('resize', () => {
