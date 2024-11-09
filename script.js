@@ -47,13 +47,18 @@ const ball = Bodies.circle(
   }
 );
 
+const wallSettings = {
+  size: 20,
+  options: { isStatic: true, render: { opacity: 0 } },
+}
+
 // ワールドにすべてのボディ（オブジェクト）を追加
 Composite.add(world, [
-  Bodies.rectangle(window.innerWidth / 2, 0, window.innerWidth, 20, { isStatic: true }), // 上の壁 rectangle(中心位置のx座標, 中心位置のy座標, width, height, options)
-  Bodies.rectangle(window.innerWidth / 2, window.innerHeight, window.innerWidth, 20, { isStatic: true }), // 下の壁
-  Bodies.rectangle(window.innerWidth, window.innerHeight / 2, 20, window.innerHeight, { isStatic: true }), // 右の壁
-  Bodies.rectangle(0, window.innerHeight / 2, 20, window.innerHeight, { isStatic: true }), // 左の壁
   ball,
+  Bodies.rectangle(window.innerWidth / 2, 0, window.innerWidth, wallSettings.size, wallSettings.options), // 上の壁 rectangle(中心位置のx座標, 中心位置のy座標, width, height, options)
+  Bodies.rectangle(window.innerWidth / 2, window.innerHeight, window.innerWidth, wallSettings.size, wallSettings.options), // 下の壁
+  Bodies.rectangle(window.innerWidth, window.innerHeight / 2, wallSettings.size, window.innerHeight, wallSettings.options), // 右の壁
+  Bodies.rectangle(0, window.innerHeight / 2, wallSettings.size, window.innerHeight, wallSettings.options), // 左の壁
 ]);
 
 // Composite.add(world, [ball]);
@@ -133,10 +138,10 @@ window.addEventListener('resize', () => {
   Composite.clear(world, false, true);
 
   Composite.add(world, [
-    boxA, boxB, ball,
-    Bodies.rectangle(window.innerWidth / 2, 0, window.innerWidth, 50, { isStatic: true }),
-    Bodies.rectangle(window.innerWidth / 2, window.innerHeight, window.innerWidth, 50, { isStatic: true }),
-    Bodies.rectangle(window.innerWidth, window.innerHeight / 2, 50, window.innerHeight, { isStatic: true }),
-    Bodies.rectangle(0, window.innerHeight / 2, 50, window.innerHeight, { isStatic: true })
+    ball,
+    Bodies.rectangle(window.innerWidth / 2, 0, window.innerWidth, wallSettings.size, wallSettings.options),
+    Bodies.rectangle(window.innerWidth / 2, window.innerHeight, window.innerWidth, wallSettings.size, wallSettings.options),
+    Bodies.rectangle(window.innerWidth, window.innerHeight / 2, wallSettings.size, window.innerHeight, wallSettings.options),
+    Bodies.rectangle(0, window.innerHeight / 2, wallSettings.size, window.innerHeight, wallSettings.options),
   ]);
 });
