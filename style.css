@@ -12,6 +12,12 @@ body {
   cursor: pointer;
 }
 
+.canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 .ttl {
   font-size: 15px;
   font-weight: 400;
@@ -20,4 +26,5 @@ body {
   top: 0;
   left: 0;
   padding: 15px;
+  pointer-events: none;
 }
